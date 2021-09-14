@@ -1,0 +1,19 @@
+{
+  "name": "download",
+  "version": "0.0.1",
+  "description": "download file , 下载文件",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "content-disposition": "^0.5.3",
+    "mime-db": "^1.49.0"
+  },
+  "devDependencies": {
+    "node-xlsx": "^0.17.1"
+  }
+}

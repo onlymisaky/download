@@ -4,7 +4,10 @@
   "description": "download file , 下载文件",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index.js"
+    "examples:single": "node examples/single-download.js",
+    "examples:multiple": "node examples/multiple-downloads.js",
+    "examples:multiple-batch": "node examples/multiple-batch-downloads.js",
+    "examples:clear": "node examples/clear-cache.js"
   },
   "author": "",
   "license": "ISC",

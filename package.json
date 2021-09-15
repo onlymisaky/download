@@ -14,6 +14,7 @@
     "mime-db": "^1.49.0"
   },
   "devDependencies": {
-    "node-xlsx": "^0.17.1"
+    "node-xlsx": "^0.17.1",
+    "progress": "^2.0.3"
   }
 }

@@ -34,7 +34,7 @@ function log(text) {
 
 const sign = fs.readFileSync('.env.local', 'utf-8').trim();
 
-function processTaskResults(tasks, name) {
+function processTaskResults(tasks, no, name) {
   return Promise.allSettled(tasks)
     .then((result) => {
       const error = result
@@ -79,7 +79,7 @@ function createPersonTask(no, data) {
 
 function downloadPerson(no, data) {
   const tasks = createPersonTask(no, data);
-  return processTaskResults(tasks, data.name);
+  return processTaskResults(tasks, no, data.name);
 }
 
 function setup() {

@@ -19,7 +19,6 @@ function onStartDownload(ctx) {
 function onDownload(chunk, ctx) {
   const {
     progressBar,
-    size,
     downloaded
   } = ctx;
 

@@ -14,10 +14,10 @@ function download(urls, dests, options = {}) {
     return down(urls, dest, opts);
   }
 
-  count = urls.length;
+  count = count || urls.length - 1;
 
   const promise = slice(urls, count).reduce((prev, current, taskIdx) => {
-    return prev.then(() => {
+    return prev.then((prevResult) => {
       const tasks = current.map((url, urlIdx) => {
 
         let index = taskIdx * count + urlIdx;
@@ -28,11 +28,16 @@ function download(urls, dests, options = {}) {
           dest = dests(index, urls[index]);
         }
 
-        down(url, dest, opts);
+        return down(url, dest, opts);
       });
-      return Promise.allSettled(tasks);
+      return Promise.allSettled(tasks).then((result) => {
+        return [
+          ...prevResult,
+          ...result,
+        ]
+      })
     });
-  }, Promise.resolve());
+  }, Promise.resolve([]));
 
   return promise;
 }

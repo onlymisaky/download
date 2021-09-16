@@ -1,6 +1,5 @@
 import { del, delSync, delPromise } from '../src/lib/dir';
 
-
 function clearCache() {
   delSync('24823322.png');
   del(`download/images/avatar.png`, () => {

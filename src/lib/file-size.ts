@@ -92,4 +92,4 @@ export default size;
 
 export {
   Size,
-}
+};

@@ -19,4 +19,3 @@ function getFilename(disposition: string, requestUrl: string) {
 }
 
 export default getFilename;
-

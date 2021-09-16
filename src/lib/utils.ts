@@ -6,7 +6,6 @@ function slice<T>(arr: T[], count: number): T[][] {
   return result;
 }
 
-
 function hasOwn(obj: any, key: string) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }

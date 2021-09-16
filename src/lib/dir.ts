@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-
 function mkdirsSync(dirname: string) {
   if (fs.existsSync(dirname)) {
     return true;
@@ -134,4 +133,4 @@ export {
   delSync,
   del,
   delPromise,
-}
+};

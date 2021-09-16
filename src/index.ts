@@ -58,4 +58,4 @@ function download<T>(
   return Promise.reject('url 参数错误');
 }
 
-export default download
+export default download;

@@ -1,10 +1,14 @@
 # download 
 
-> 使用 nodejs 下载文件，受同名项目 [download](https://github.com/kevva/download) 所启发。
+> 使用 nodejs 下载文件，[download](https://github.com/kevva/download) 所启发。
 
 ## 安装
 
-- [ ] 暂未上传至 npm
+> npm 不允许 @scope 类型的包名中含有单独的 download 字母，否则无法发布
+
+```bash
+npm i @onlymisaky/downloads
+```
 
 ## 用法
 

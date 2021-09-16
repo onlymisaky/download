@@ -31,7 +31,6 @@
     "@types/content-disposition": "^0.5.4",
     "@types/mime-db": "^1.43.1",
     "@types/node": "^16.9.1",
-    "@types/node-xlsx": "^0.15.2",
     "@types/progress": "^2.0.5",
     "node-xlsx": "^0.17.1",
     "progress": "^2.0.3",

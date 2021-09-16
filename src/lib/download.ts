@@ -25,11 +25,11 @@ export interface Ctx {
 export type OnStartDownload<T> = (ctx: Ctx) => T;
 export type OnDownload<T> = (chunk: string | Buffer, ctx: Ctx, customCtx?: T) => void;
 
-export interface Options<T> {
+export type Options<T> = {
   filename: string;
   onStartDownload: OnStartDownload<T>,
   onDownload: OnDownload<T>,
-}
+} & AxiosRequestConfig;
 
 async function download<T = {}>(
   url: string,

@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('node-xlsx');
-const download = require('../index');
-const { index2NO, checkURL, slice } = require('../lib/utils');
-const { delSync } = require('../lib/dir');
+const download = require('../dist/index').default;
+const { index2NO, checkURL, slice } = require('../dist/lib/utils');
+const { delSync } = require('../dist/lib/dir');
 
 function xlsx2JSON() {
   const [{ data }] = xlsx.parse(path.resolve(__dirname, './excel.xlsx'));
@@ -28,11 +28,8 @@ function xlsx2JSON() {
 }
 
 function log(text) {
-  const dest = path.resolve(__dirname, 'error.json');
-  fs.writeFileSync(dest, text);
+  fs.writeFileSync('download/error.json', text);
 }
-
-const sign = fs.readFileSync('.env.local', 'utf-8').trim();
 
 function processTaskResults(tasks, no, name) {
   return Promise.allSettled(tasks)
@@ -68,7 +65,6 @@ function createPersonTask(no, data) {
 
     return download(uri, dest, {
       filename: `${name}-${filename}`,
-      params: { sign }
     }).catch(() => Promise.reject({
       [filename]: uri
     }));
@@ -103,7 +99,7 @@ function setup() {
         });
         return Promise.all(ps);
       })
-    }, Promise.resolve())
+    }, Promise.resolve([]))
     .then(() => {
       log(JSON.stringify(error, null, '\t'));
     });

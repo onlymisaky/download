@@ -1,4 +1,4 @@
-const download = require('../index');
+import download from '../src/index';
 
 async function singleDownload() {
   // 下载到当前目录，根据 content-disposition 或 url 自动设置文件名

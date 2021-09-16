@@ -1,23 +1,45 @@
 {
-  "name": "download",
+  "name": "@onlymisaky/downloads",
   "version": "0.0.1",
   "description": "download file , 下载文件",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "typings": "dist/typings/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "examples:single": "node examples/single-download.js",
-    "examples:multiple": "node examples/multiple-downloads.js",
-    "examples:multiple-batch": "node examples/multiple-batch-downloads.js",
-    "examples:clear": "node examples/clear-cache.js"
+    "prebuild": "ts-node examples/del-dist.ts",
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "examples:single": "ts-node examples/single-download.ts",
+    "examples:multiple": "ts-node examples/multiple-downloads.ts",
+    "examples:multiple-batch": "node examples/multiple-batch-downloads.ts",
+    "examples:clear": "ts-node examples/clear-cache.ts"
   },
-  "author": "",
+  "author": "onlymisaky",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/onlymisaky/download"
+  },
   "dependencies": {
     "axios": "^0.21.4",
     "content-disposition": "^0.5.3",
     "mime-db": "^1.49.0"
   },
   "devDependencies": {
+    "@types/content-disposition": "^0.5.4",
+    "@types/mime-db": "^1.43.1",
+    "@types/node": "^16.9.1",
+    "@types/node-xlsx": "^0.15.2",
+    "@types/progress": "^2.0.5",
     "node-xlsx": "^0.17.1",
-    "progress": "^2.0.3"
-  }
+    "progress": "^2.0.3",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  },
+  "keywords": [
+    "download",
+    "axios"
+  ]
 }

@@ -1,4 +1,4 @@
-const { del, delSync, delPromise } = require('../lib/dir');
+import { del, delSync, delPromise } from '../src/lib/dir';
 
 function clearCache() {
   delSync('24823322.png');

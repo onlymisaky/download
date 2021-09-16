@@ -1,10 +1,11 @@
-const ProgressBar = require('progress');
-const sizeFormat = require('../lib/file-size');
-const download = require('../index');
+import ProgressBar from 'progress';
+import sizeFormat from '../src/lib/file-size';
+import download from '../src/index';
+import { Ctx } from '../src/lib/download';
 
 // 开始下载回调
 // 该函数的返回值将会作为参数传给 onDownload 
-function onStartDownload(ctx) {
+function onStartDownload(ctx: Ctx) {
   const { file, size, } = ctx;
   const progressBar = new ProgressBar(` :title: ${file} :downloaded/${size.toString(2)} :bar :percent`, {
     complete: '█',
@@ -18,9 +19,10 @@ function onStartDownload(ctx) {
 
 // 下载中回调
 // 第三个参数为 onStartDownload 的返回值，默认为 undefined
-function onDownload(chunk, ctx, progressBar) {
+function onDownload(chunk: string | Buffer, ctx: Ctx, customCtx?: ProgressBar) {
   const { downloaded } = ctx;
-  progressBar.tick(chunk.length, {
+  const progressBar = customCtx;
+  progressBar?.tick(chunk.length, {
     title: '正在下载',
     downloaded: sizeFormat(downloaded, 'B').toString(2),
   });

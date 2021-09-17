@@ -1,11 +1,13 @@
 {
   "name": "@onlymisaky/downloads",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "description": "download file , 下载文件",
   "main": "index.js",
   "typings": "typings/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "index.js",
+    "typings"
   ],
   "scripts": {
     "prebuild": "ts-node examples/del-dist.ts",

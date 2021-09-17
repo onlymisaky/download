@@ -4,10 +4,10 @@ import typescript from '@rollup/plugin-typescript';
 import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
-const banner =`
+const banner = `
 /**
  * @license
- * author: ${pkg.aauthor}
+ * author: ${pkg.author}
  * ${pkg.name} v${pkg.version}
  * (c) 2021-${new Date().getFullYear()}
  * Released under the ${pkg.license} license.
@@ -24,12 +24,13 @@ const rollupConfig = {
       exports: 'default',
       banner,
     },
-    {
-      file: pkg.module,
-      format: 'esm',
-      exports: 'default',
-      banner,
-    }
+    // .mjs 会给大部份使用者带来困扰
+    // {
+    //   file: pkg.module,
+    //   format: 'esm',
+    //   exports: 'default',
+    //   banner,
+    // }
   ],
   plugins: [
     // 导入 node_modules 

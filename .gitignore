@@ -3,6 +3,8 @@
 *.zip
 
 dist
+index.js
+typings
 
 .DS_Store
 node_modules

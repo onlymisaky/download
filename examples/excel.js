@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('node-xlsx');
-const download = require('../dist/index').default;
-const { index2NO, checkURL, slice } = require('../dist/lib/utils');
-const { delSync } = require('../dist/lib/dir');
+const download = require('../dist/index');
+const { index2NO, checkURL, slice } = require('../src/lib/utils');
+const { delSync } = require('../src/lib/dir');
 
 function xlsx2JSON() {
   const [{ data }] = xlsx.parse(path.resolve(__dirname, './excel.xlsx'));

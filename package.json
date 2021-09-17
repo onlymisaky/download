@@ -1,15 +1,16 @@
 {
   "name": "@onlymisaky/downloads",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "download file , 下载文件",
   "main": "dist/index.js",
+  "module": "dist/index.esm.mjs",
   "typings": "dist/typings/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "prebuild": "ts-node examples/del-dist.ts",
-    "build": "tsc",
+    "build": "rollup -c",
     "prepublishOnly": "npm run build",
     "examples:single": "ts-node examples/single-download.ts",
     "examples:multiple": "ts-node examples/multiple-downloads.ts",
@@ -28,17 +29,24 @@
     "mime-db": "^1.49.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-typescript": "^8.2.5",
     "@types/content-disposition": "^0.5.4",
     "@types/mime-db": "^1.43.1",
     "@types/node": "^16.9.1",
     "@types/progress": "^2.0.5",
     "node-xlsx": "^0.17.1",
     "progress": "^2.0.3",
+    "rollup": "^2.56.3",
     "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
     "typescript": "^4.4.3"
   },
   "keywords": [
     "download",
-    "axios"
+    "axios",
+    "typescript"
   ]
 }

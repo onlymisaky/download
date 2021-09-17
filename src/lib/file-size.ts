@@ -91,5 +91,6 @@ function size(size: number, unit: Unit) {
 export default size;
 
 export {
+  size,
   Size,
 };

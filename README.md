@@ -14,9 +14,9 @@ npm i @onlymisaky/downloads
 
 ## 单个文件下载
 
-[examples/single-download.js](https://github.com/onlymisaky/download/blob/master/examples/single-download.js)
+[examples/single-download.ts](https://github.com/onlymisaky/download/blob/master/examples/single-download.ts)
 
-```js
+```ts
 // 下载到当前目录，根据 content-disposition 或 url 自动设置文件名
 await download('https://avatars.githubusercontent.com/u/24823322');
 
@@ -48,9 +48,9 @@ await download(
 
 ## 多个文件下载
 
-[examples/multiple-downloads.js](https://github.com/onlymisaky/download/blob/master/examples/multiple-downloads.js)
+[examples/multiple-downloads.ts](https://github.com/onlymisaky/download/blob/master/examples/multiple-downloads.ts)
 
-```js
+```ts
 const ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const links = ids.map((id) => `https://avatars.githubusercontent.com/u/${id}`);
 
@@ -77,10 +77,10 @@ await download(
 
 ## 多个文件分批次下载
 
-[examples/multiple-batch-downloads.js](https://github.com/onlymisaky/download/blob/master/examples/multiple-batch-downloads.js)
+[examples/multiple-batch-downloads.ts](https://github.com/onlymisaky/download/blob/master/examples/multiple-batch-downloads.ts)
 
 
-```js
+```ts
 // 开始下载回调
 // 该函数的返回值将会作为参数传给 onDownload 
 function onStartDownload(ctx) {

@@ -1,6 +1,6 @@
 {
   "name": "@onlymisaky/downloads",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "download file , 下载文件",
   "main": "index.js",
   "typings": "typings/index.d.ts",
@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run build",
     "examples:single": "ts-node examples/single-download.ts",
     "examples:multiple": "ts-node examples/multiple-downloads.ts",
-    "examples:multiple-batch": "node examples/multiple-batch-downloads.ts",
+    "examples:multiple-batch": "ts-node examples/multiple-batch-downloads.ts",
     "examples:clear": "ts-node examples/clear-cache.ts"
   },
   "author": "onlymisaky",

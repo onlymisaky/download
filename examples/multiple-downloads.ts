@@ -10,7 +10,7 @@ async function multipleDownloads() {
     'download/images/avatars'
   );
 
-  // 下载链接数组与 dest 目录数组一一相对应
+  // 下载链接数组与 output 目录数组一一相对应
   // 0.png 下载到 download/images/avatars/0/0.png
   // 1.png 下载到 download/images/avatars/1/1.png
   await download(

@@ -61,9 +61,9 @@ function createPersonTask(no, data) {
       uri += '/primary';
     }
 
-    const dest = `download/${no}-${name}`;
+    const output = `download/${no}-${name}`;
 
-    return download(uri, dest, {
+    return download(uri, output, {
       filename: `${name}-${filename}`,
     }).catch(() => Promise.reject({
       [filename]: uri

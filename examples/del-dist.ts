@@ -1,4 +1,4 @@
-import { delSync} from '../src/lib/dir';
+import { delSync } from '../src/lib/dir';
 delSync('dist');
 delSync('index.js');
 delSync('typings');

@@ -1,9 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import resolveDest from './resolve-dest';
-import getExtByMime from './get-ext';
-import getFilename from './get-filename';
+import { parseOutput, parseDisposition, parseUrl, split, getExtensionsByMime } from './get-output';
 import { mkdirsSync } from './dir';
 import sizeFormat, { Size } from './file-size';
 
@@ -27,25 +25,29 @@ export type OnDownload<T> = (chunk: string | Buffer, ctx: Ctx, customCtx?: T) =>
 
 export type Options<T> = {
   filename: string;
+  onRequest(): void;
   onStartDownload: OnStartDownload<T>,
   onDownload: OnDownload<T>,
 } & AxiosRequestConfig;
 
 async function download<T = {}>(
   url: string,
-  dest: string,
+  output: string,
   options: Partial<Options<T> & AxiosRequestConfig> = {}
 ) {
 
   try {
     let {
       filename,
+      onRequest = () => undefined,
       onStartDownload = () => undefined,
       onDownload = () => { },
       ...AxiosRequestConfig
     } = options;
 
-    let { output, name, ext } = resolveDest(`${dest}`);
+    let { outputPath, filename: _filename } = parseOutput(`${output}`);
+
+    onRequest();
 
     const res: AxiosResponse<fs.ReadStream> = await axios({
       method: 'get',
@@ -56,26 +58,41 @@ async function download<T = {}>(
 
     const { data, headers } = res;
 
-    const fileType = headers['content-type'];
+    const contentType = headers['content-type'];
     const fileDisposition = headers['content-disposition'];
 
-    filename = filename || name || getFilename(fileDisposition, url);
-    let [_filename, _ext] = filename.split('.');
-    filename = _filename;
-    ext = ext || getExtByMime(fileType) || _ext;
+    filename = filename || _filename || parseDisposition(fileDisposition) || parseUrl(url);
 
-    mkdirsSync(output);
+    const arr = [
+      filename,
+      _filename,
+      parseDisposition(fileDisposition),
+      parseUrl(url),
+    ];
 
-    const outputPath = `${output}/${filename}${ext}`;
+    for (let index = 0; index < arr.length; index++) {
+      let [, extname] = split(arr[index], '.');
+      if (extname === '') {
+        if (index < arr.length - 1) {
+          continue;
+        } else {
+          filename = filename + '.' + getExtensionsByMime(contentType)[0];
+        }
+      } else {
+        break;
+      }
+    }
 
-    const writer = fs.createWriteStream(`${output}/${filename}${ext}`);
+    mkdirsSync(outputPath);
+
+    const writer = fs.createWriteStream(`${outputPath}/${filename}`);
 
     const contentLength = headers['content-length'];
     const fileSize = sizeFormat(contentLength, 'B');
 
     const result = {
       path: path.resolve(outputPath),
-      file: `${filename}${ext}`,
+      file: `${filename}`,
       size: `${fileSize}`,
     };
 

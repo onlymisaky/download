@@ -8,40 +8,40 @@ interface DownloadOptions {
 }
 
 function download<T>(
-  urls: string | string[],
-  dests?: string | string[] | DestsFunc,
+  url: string | string[],
+  output?: string | string[] | DestsFunc,
   options?: Partial<DownloadOptions & Options<T>>
 ): Promise<Result | PromiseSettledResult<Result>[]> {
   let opt: Partial<DownloadOptions & Options<T>> = options || {};
   let { count, ...opts } = opt;
 
-  let dest = '.';
-  let type = getType(dests);
+  let outputPath = '.';
+  let type = getType(output);
   if (['string', 'number'].includes(type)) {
-    dest = dests + '';
+    outputPath = output + '';
   }
 
-  if (typeof urls === 'string') {
-    return down(urls, dest, opts);
+  if (typeof url === 'string') {
+    return down(url, outputPath, opts);
   }
 
-  if (Array.isArray(urls)) {
-    count = count || urls.length - 1;
+  if (Array.isArray(url)) {
+    count = count || url.length - 1;
 
-    const promise = slice(urls, count).reduce((prev: Promise<PromiseSettledResult<Result>[]>, current, taskIdx) => {
+    const promise = slice(url, count).reduce((prev: Promise<PromiseSettledResult<Result>[]>, current, taskIdx) => {
       return prev.then((prevResult) => {
         const tasks = current.map((url, urlIdx) => {
 
           let n = count as number;
           let index = taskIdx * n + urlIdx;
-          if (Array.isArray(dests)) {
-            dest = dests[index];
+          if (Array.isArray(output)) {
+            outputPath = output[index];
           }
-          if (typeof dests === 'function') {
-            dest = dests(index, urls[index]);
+          if (typeof output === 'function') {
+            outputPath = output(index, url[index]);
           }
 
-          return down(url, dest, opts);
+          return down(url, outputPath, opts);
         });
         return Promise.allSettled(tasks).then((result) => {
           return [

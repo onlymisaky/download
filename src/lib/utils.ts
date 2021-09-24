@@ -1,3 +1,7 @@
+export interface Obj {
+  [key: string]: any
+}
+
 function slice<T>(arr: T[], count: number): T[][] {
   const result = [];
   for (var i = 0; i < arr.length; i += count) {

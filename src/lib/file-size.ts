@@ -85,7 +85,7 @@ class Size {
 }
 
 function size(size: number, unit: Unit) {
-  return new Size(size, unit);
+  return new Size(size * 1, unit);
 }
 
 export default size;

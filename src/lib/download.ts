@@ -1,9 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { parseOutput, parseDisposition, parseUrl, split, getExtensionsByMime } from './get-output';
+import { parseOutput, parseUrl, split, } from './get-output';
 import { mkdirsSync } from './dir';
 import sizeFormat, { Size } from './file-size';
+import preRequest from './pre-request';
+import { resolveResHeaders } from './headers';
 
 export interface Result {
   path: string,
@@ -16,8 +18,7 @@ export interface Ctx {
   file: string,
   size: Size,
   downloaded: number,
-  response: AxiosResponse<fs.ReadStream>,
-  stream: fs.WriteStream,
+  response?: AxiosResponse<fs.ReadStream>,
 }
 
 export type OnStartDownload<T> = (ctx: Ctx) => T;
@@ -46,27 +47,22 @@ async function download<T = {}>(
     } = options;
 
     let { outputPath, filename: _filename } = parseOutput(`${output}`);
+    const preResHeaders = await preRequest(url);
+    const {
+      extensions,
+      filename: resFilename,
+      rangeStart,
+      rangeEnd,
+      size,
+      length,
+    } = resolveResHeaders(preResHeaders);
 
-    onRequest();
-
-    const res: AxiosResponse<fs.ReadStream> = await axios({
-      method: 'get',
-      url: url,
-      ...AxiosRequestConfig,
-      responseType: 'stream',
-    });
-
-    const { data, headers } = res;
-
-    const contentType = headers['content-type'];
-    const fileDisposition = headers['content-disposition'];
-
-    filename = filename || _filename || parseDisposition(fileDisposition) || parseUrl(url);
+    filename = filename || _filename || resFilename || parseUrl(url);
 
     const arr = [
       filename,
       _filename,
-      parseDisposition(fileDisposition),
+      resFilename,
       parseUrl(url),
     ];
 
@@ -76,7 +72,7 @@ async function download<T = {}>(
         if (index < arr.length - 1) {
           continue;
         } else {
-          filename = filename + '.' + getExtensionsByMime(contentType)[0];
+          filename = filename + '.' + extensions[0];
         }
       } else {
         break;
@@ -85,10 +81,7 @@ async function download<T = {}>(
 
     mkdirsSync(outputPath);
 
-    const writer = fs.createWriteStream(`${outputPath}/${filename}`);
-
-    const contentLength = headers['content-length'];
-    const fileSize = sizeFormat(contentLength, 'B');
+    const fileSize = sizeFormat(size, 'B');
 
     const result = {
       path: path.resolve(outputPath),
@@ -96,16 +89,35 @@ async function download<T = {}>(
       size: `${fileSize}`,
     };
 
+    const { headers: reqHeaders, ...configs } = AxiosRequestConfig;
+
+    onRequest();
+
     const ctx = {
       ...result,
       size: fileSize,
       downloaded: 0,
-      response: res,
-      stream: writer,
     };
 
     // 通过 onStartDownload 创建自定义上下文，将该对象暴露给 onDownload
     let customCtx = onStartDownload(ctx);
+
+    const res: AxiosResponse<fs.ReadStream> = await axios({
+      method: 'get',
+      url: url,
+      ...configs,
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        ...reqHeaders,
+      },
+      responseType: 'stream',
+    });
+
+    let { data } = res;
+
+    const writer = fs.createWriteStream(`${outputPath}/${filename}`);
 
     // TODO onData 结束，是否也表示写入完成了？
     data.on('data', (chunk) => {

@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { parseOutput, parseUrl, split, } from './get-output';
-import { mkdirsSync } from './dir';
-import sizeFormat, { Size } from './file-size';
+import { mkdirsSync } from '../lib/dir';
+import sizeFormat, { Size } from '../lib/file-size';
+import { defaultHeaders, resolveResHeaders } from './headers';
 import preRequest from './pre-request';
-import { resolveResHeaders } from './headers';
+import genOutput from './output';
 
 export interface Result {
   path: string,
@@ -39,14 +39,13 @@ async function download<T = {}>(
 
   try {
     let {
-      filename,
+      filename: userFilename,
       onRequest = () => undefined,
       onStartDownload = () => undefined,
       onDownload = () => { },
       ...AxiosRequestConfig
     } = options;
 
-    let { outputPath, filename: _filename } = parseOutput(`${output}`);
     const preResHeaders = await preRequest(url);
     const {
       extensions,
@@ -57,27 +56,13 @@ async function download<T = {}>(
       length,
     } = resolveResHeaders(preResHeaders);
 
-    filename = filename || _filename || resFilename || parseUrl(url);
-
-    const arr = [
-      filename,
-      _filename,
+    const { outputPath, filename } = genOutput({
+      output,
+      url,
+      userFilename,
       resFilename,
-      parseUrl(url),
-    ];
-
-    for (let index = 0; index < arr.length; index++) {
-      let [, extname] = split(arr[index], '.');
-      if (extname === '') {
-        if (index < arr.length - 1) {
-          continue;
-        } else {
-          filename = filename + '.' + extensions[0];
-        }
-      } else {
-        break;
-      }
-    }
+      resExtensions: extensions
+    });
 
     mkdirsSync(outputPath);
 
@@ -107,9 +92,7 @@ async function download<T = {}>(
       url: url,
       ...configs,
       headers: {
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-        'Pragma': 'no-cache',
+        ...defaultHeaders,
         ...reqHeaders,
       },
       responseType: 'stream',

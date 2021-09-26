@@ -1,5 +1,13 @@
-import { getExtensionsByMime, parseDisposition } from "./get-output";
-import { Obj } from "./utils";
+import contentDisposition from 'content-disposition';
+import mimeDB from 'mime-db';
+
+import { Obj } from "../lib/utils";
+
+const defaultHeaders = {
+  'Cache-Control': 'no-cache',
+  'Connection': 'keep-alive',
+  'Pragma': 'no-cache',
+};
 
 function formatHeaders(headers: Obj): Obj {
   return Object.keys(headers).reduce((header, key) => {
@@ -8,6 +16,26 @@ function formatHeaders(headers: Obj): Obj {
     header[name] = value;
     return header;
   }, {} as Obj);
+}
+
+function parseDisposition(disposition: string) {
+  let filename = '';
+  if (disposition) {
+    const parsed = contentDisposition.parse(disposition);
+    if (parsed.parameters && parsed.parameters.filename) {
+      filename = parsed.parameters.filename;
+    }
+  }
+  return filename;
+}
+
+function getExtensionsByMime(mime: string) {
+  const mimeEntry = mimeDB[mime];
+  if (mimeEntry) {
+    const extensions = mimeEntry.extensions;
+    return (extensions || []) as string[];
+  }
+  return [];
 }
 
 function resolveResHeaders(resHeaders: Obj) {
@@ -36,6 +64,8 @@ function resolveResHeaders(resHeaders: Obj) {
 }
 
 export {
+  defaultHeaders,
   formatHeaders,
   resolveResHeaders,
+  parseDisposition,
 }

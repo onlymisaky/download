@@ -35,6 +35,26 @@ function checkURL(url: string) {
   return /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/.test(url);
 }
 
+/**
+ * split(`file.ext1.ext`, '.', 'last')  ==>   ['file.ext1', 'ext']
+ * split(`file.ext1.ext`, '.', '2')     ==>   ['file.ext1', 'ext']
+ * split(`file.ext1.ext`, '.', '1')     ==>   ['file', 'ext1.ext']
+ */
+function split(str: string, separator: string, index: number | 'last'): [string, string] {
+  const arr = str.split(separator);
+  const len = arr.length;
+  if (len === 1 || index <= 0 || index > len - 1) {
+    return [str, ''];
+  }
+  if (index === 'last') {
+    index = len - 1;
+  }
+  return [
+    arr.slice(0, index).join(separator),
+    arr.slice(index).join(separator),
+  ]
+}
+
 export {
   slice,
   hasOwn,
@@ -42,4 +62,5 @@ export {
   getType,
   index2NO,
   checkURL,
+  split,
 };

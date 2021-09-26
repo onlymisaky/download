@@ -1,4 +1,4 @@
-import down, { Options, Result } from './lib/download';
+import down, { Options, Result } from './core/download';
 import { getType, slice } from './lib/utils';
 
 type DestsFunc = (index: number, url: string) => string;

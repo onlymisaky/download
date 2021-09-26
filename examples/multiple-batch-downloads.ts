@@ -1,7 +1,7 @@
 import ProgressBar from 'progress';
 import sizeFormat from '../src/lib/file-size';
 import download from '../src/index';
-import { Ctx } from '../src/lib/download';
+import { Ctx } from '../src/core/download';
 
 // 开始下载回调
 // 该函数的返回值将会作为参数传给 onDownload 

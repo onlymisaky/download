@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { formatHeaders } from './headers';
+import { defaultHeaders, formatHeaders } from './headers';
 
 async function preRequest(url: string) {
   try {
@@ -7,13 +7,10 @@ async function preRequest(url: string) {
       method: 'get',
       url,
       headers: {
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-        'Pragma': 'no-cache',
+        ...defaultHeaders,
         'Range': 'bytes=0-1'
       }
     });
-
     return formatHeaders(res.headers);
   } catch (err) {
     throw err;

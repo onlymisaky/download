@@ -1,18 +1,19 @@
-import down, { Options, Result } from './core/download';
+import down from './core/download';
 import { getType, slice } from './lib/utils';
+import { DownloadOptions, DownloadResult } from './types';
 
 type DestsFunc = (index: number, url: string) => string;
 
-interface DownloadOptions {
+interface Options {
   count: number,
 }
 
 function download<T>(
   url: string | string[],
   output?: string | string[] | DestsFunc,
-  options?: Partial<DownloadOptions & Options<T>>
-): Promise<Result | PromiseSettledResult<Result>[]> {
-  let opt: Partial<DownloadOptions & Options<T>> = options || {};
+  options?: Partial<Options & DownloadOptions<T>>
+): Promise<DownloadResult | PromiseSettledResult<DownloadResult>[]> {
+  let opt: Partial<Options & DownloadOptions<T>> = options || {};
   let { count, ...opts } = opt;
 
   let outputPath = '.';
@@ -28,7 +29,7 @@ function download<T>(
   if (Array.isArray(url)) {
     count = count || url.length - 1;
 
-    const promise = slice(url, count).reduce((prev: Promise<PromiseSettledResult<Result>[]>, current, taskIdx) => {
+    const promise = slice(url, count).reduce((prev: Promise<PromiseSettledResult<DownloadResult>[]>, current, taskIdx) => {
       return prev.then((prevResult) => {
         const tasks = current.map((url, urlIdx) => {
 

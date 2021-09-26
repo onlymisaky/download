@@ -1,7 +1,6 @@
 import contentDisposition from 'content-disposition';
 import mimeDB from 'mime-db';
-
-import { Obj } from "../lib/utils";
+import { Obj } from '../types';
 
 const defaultHeaders = {
   'Cache-Control': 'no-cache',

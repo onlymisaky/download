@@ -1,52 +1,34 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { mkdirsSync } from '../lib/dir';
-import sizeFormat, { Size } from '../lib/file-size';
+import sizeFormat from '../lib/file-size';
 import { defaultHeaders, resolveResHeaders } from './headers';
 import preRequest from './pre-request';
 import genOutput from './output';
-
-export interface Result {
-  path: string,
-  file: string,
-  size: string;
-}
-
-export interface Ctx {
-  path: string,
-  file: string,
-  size: Size,
-  downloaded: number,
-  response?: AxiosResponse<fs.ReadStream>,
-}
-
-export type OnStartDownload<T> = (ctx: Ctx) => T;
-export type OnDownload<T> = (chunk: string | Buffer, ctx: Ctx, customCtx?: T) => void;
-
-export type Options<T> = {
-  filename: string;
-  onRequest(): void;
-  onStartDownload: OnStartDownload<T>,
-  onDownload: OnDownload<T>,
-} & AxiosRequestConfig;
+import {
+  Obj,
+  DownloadCbCtx,
+  DownloadResult,
+  DownloadOptions,
+} from '../types';
 
 async function download<T = {}>(
   url: string,
   output: string,
-  options: Partial<Options<T> & AxiosRequestConfig> = {}
+  options: Partial<DownloadOptions<T>> = {}
 ) {
 
   try {
     let {
       filename: userFilename,
-      onRequest = () => undefined,
       onStartDownload = () => undefined,
       onDownload = () => { },
       ...AxiosRequestConfig
     } = options;
 
     const preResHeaders = await preRequest(url);
+
     const {
       extensions,
       filename: resFilename,
@@ -69,16 +51,14 @@ async function download<T = {}>(
     const fileSize = sizeFormat(size, 'B');
 
     const result = {
-      path: path.resolve(outputPath),
-      file: `${filename}`,
+      outputPath: path.resolve(outputPath),
+      filename: `${filename}`,
       size: `${fileSize}`,
     };
 
     const { headers: reqHeaders, ...configs } = AxiosRequestConfig;
 
-    onRequest();
-
-    const ctx = {
+    const ctx: DownloadCbCtx = {
       ...result,
       size: fileSize,
       downloaded: 0,
@@ -107,9 +87,10 @@ async function download<T = {}>(
       ctx.downloaded += chunk.length;
       onDownload(chunk, ctx, customCtx);
     });
+
     data.pipe(writer);
 
-    return new Promise<Result>((resolve, reject) => {
+    const promise = new Promise<DownloadResult>((resolve, reject) => {
       data.on('error', (err) => {
         reject(err);
       });
@@ -122,8 +103,11 @@ async function download<T = {}>(
         resolve(result);
       });
     });
+
+    return promise;
   } catch (err) {
-    return Promise.reject(err);
+    const error = Promise.reject(err);
+    return error;
   }
 }
 

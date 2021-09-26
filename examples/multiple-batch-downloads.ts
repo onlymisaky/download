@@ -1,31 +1,18 @@
 import ProgressBar from 'progress';
-import sizeFormat from '../src/lib/file-size';
 import download from '../src/index';
-import { Ctx } from '../src/core/download';
+import { DownloadCbCtx } from '../src/types';
+import { createBar, tickBar } from './progress-bar'
 
 // 开始下载回调
 // 该函数的返回值将会作为参数传给 onDownload 
-function onStartDownload(ctx: Ctx) {
-  const { file, size, } = ctx;
-  const progressBar = new ProgressBar(` :title: ${file} :downloaded/${size.toString(2)} :bar :percent`, {
-    complete: '█',
-    head: '',
-    incomplete: '░',
-    width: 77,
-    total: size.B * 1,
-  });
-  return progressBar;
+function onStartDownload(ctx: DownloadCbCtx) {
+  return createBar(ctx.filename, ctx.size)
 }
 
 // 下载中回调
 // 第三个参数为 onStartDownload 的返回值，默认为 undefined
-function onDownload(chunk: string | Buffer, ctx: Ctx, customCtx?: ProgressBar) {
-  const { downloaded } = ctx;
-  const progressBar = customCtx;
-  progressBar?.tick(chunk.length, {
-    title: '正在下载',
-    downloaded: sizeFormat(downloaded, 'B').toString(2),
-  });
+function onDownload(chunk: string | Buffer, ctx: DownloadCbCtx, customCtx?: ProgressBar) {
+  tickBar(customCtx as ProgressBar, chunk.length, ctx.downloaded)
 }
 
 async function multipleBatchDownloads() {

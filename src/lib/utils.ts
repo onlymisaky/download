@@ -1,6 +1,4 @@
-export interface Obj {
-  [key: string]: any
-}
+import { Obj } from "../types";
 
 function slice<T>(arr: T[], count: number): T[][] {
   const result = [];
@@ -53,6 +51,10 @@ function split(str: string, separator: string, index: number | 'last'): [string,
     arr.slice(0, index).join(separator),
     arr.slice(index).join(separator),
   ]
+}
+
+function setItem(obj: Obj, key: string | symbol, val: any) {
+  obj[key] = val;
 }
 
 export {

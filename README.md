@@ -1,6 +1,6 @@
 # download 
 
-> 使用 nodejs 下载文件，[download](https://github.com/kevva/download) 所启发。
+> 使用 nodejs 下载文件，受 [download](https://github.com/kevva/download) 启发。
 
 ## 安装
 
@@ -84,33 +84,13 @@ await download(
 // 开始下载回调
 // 该函数的返回值将会作为参数传给 onDownload 
 function onStartDownload(ctx) {
-  const { file, size, } = ctx;
-  const progressBar = new ProgressBar(
-    ` :title: ${file} :downloaded/${size.toString(2)} :bar :percent`,
-    {
-      complete: '█',
-      head: '',
-      incomplete: '░',
-      width: 77,
-      total: size.B * 1,
-    }
-  );
-  return progressBar;
+  return createBar(ctx.filename, ctx.size)
 }
 
 // 下载中回调
 // 第三个参数为 onStartDownload 的返回值，默认为 undefined
 function onDownload(chunk, ctx, progressBar) {
-  const { downloaded } = ctx;
-  progressBar.tick(chunk.length, {
-    title: '正在下载',
-    downloaded: sizeFormat(downloaded, 'B').toString(2),
-  });
-  if (progressBar.complete) {
-    progressBar.render({
-      title: '下载完成',
-    });
-  }
+  tickBar(customCtx as ProgressBar, chunk.length, ctx.downloaded)
 }
 
 const links = [
@@ -176,7 +156,7 @@ type: `string`
 
 ##### onStartDownload
 
-type: `<T>(ctx: Ctx) => T`
+type: `<T>(ctx: DownloadCbCtx) => T`
 
 default: `() => undefined`
 
@@ -184,16 +164,16 @@ default: `() => undefined`
 
 ##### onDownload
 
-type: `<T>(chunk: string | Buffer, ctx: Ctx, customCtx: T) => void`
+type: `<T>(chunk: string | Buffer, ctx: DownloadCbCtx, customCtx: T) => void`
 
 default: `() => { }`
 
 下载过程中的回调，如果你对 `fs.ReadStream` 有所了解的话，你完全可以把他当作 `readStream.on('data')` 的回调来使用。
 
-##### Ctx
-- path: 文件全路径
-- file: 文件完整名称，包含扩展名
+##### DownloadCbCtx
+- outputPath: 文件全路径
+- filename: 文件完整名称，包含扩展名
 - size: 文件大小，这是一个内部封装的对象，你可以通过调用 `toString()` 方法来直接显示
 - downloaded: 已下载的大小, 单位 byte
 - response: 请求的完整响应 AxiosResponse<fs.ReadStream>
-- stream: 正在写入的流 fs.WriteStream
+- ~~stream: 正在写入的流 fs.WriteStream~~

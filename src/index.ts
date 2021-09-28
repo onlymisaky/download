@@ -1,4 +1,4 @@
-import down from './core/download';
+import { downloadCore } from './core';
 import { getType, slice } from './lib/utils';
 import { DownloadOptions, DownloadResult } from './types';
 
@@ -23,7 +23,7 @@ function download<T>(
   }
 
   if (typeof url === 'string') {
-    return down(url, outputPath, opts);
+    return downloadCore(url, outputPath, opts);
   }
 
   if (Array.isArray(url)) {
@@ -42,7 +42,7 @@ function download<T>(
             outputPath = output(index, url[index]);
           }
 
-          return down(url, outputPath, opts);
+          return downloadCore(url, outputPath, opts);
         });
         return Promise.allSettled(tasks).then((result) => {
           return [

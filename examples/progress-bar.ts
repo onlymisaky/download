@@ -1,5 +1,5 @@
 import ProgressBar from 'progress';
-import sizeFormat, { Size } from '../src/lib/file-size';
+import { Size, sizeFactory } from '../src/lib/file-size';
 
 export function createBar(filename: string, size: Size) {
   const bar = new ProgressBar(` :title: ${filename} :downloaded/${size.toString(2)} :bar :percent`, {
@@ -15,6 +15,6 @@ export function createBar(filename: string, size: Size) {
 export function tickBar(bar: ProgressBar, count: number, downloaded: number) {
   bar.tick(count, {
     title: '正在下载',
-    downloaded: sizeFormat(downloaded, 'B').toString(2),
+    downloaded: sizeFactory(downloaded, 'B').toString(2),
   });
 }

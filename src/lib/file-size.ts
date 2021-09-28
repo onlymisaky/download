@@ -31,7 +31,7 @@ function round(size: number, unit: Unit): Round {
   return round(nearSize, nearUnit as Unit);
 }
 
-class Size {
+export class Size {
 
   size: number;
   unit: Unit;
@@ -84,13 +84,6 @@ class Size {
 
 }
 
-function size(size: number, unit: Unit) {
+export function sizeFactory(size: number, unit: Unit) {
   return new Size(size * 1, unit);
 }
-
-export default size;
-
-export {
-  size,
-  Size,
-};

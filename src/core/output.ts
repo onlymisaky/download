@@ -46,7 +46,7 @@ interface Opt {
   resExtensions?: string[],
 }
 
-export default function genOutput(options: Opt) {
+export function genOutput(options: Opt) {
   const {
     output,
     url = '',

@@ -1,20 +1,18 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { defaultHeaders, formatHeaders } from './headers';
 
-async function preRequest(url: string) {
-  try {
-    const res = await axios({
-      method: 'get',
-      url,
-      headers: {
-        ...defaultHeaders,
-        'Range': 'bytes=0-1'
-      }
-    });
+export function preRequest(url: string, requestConfig: AxiosRequestConfig = {}) {
+  const { headers, ...otherConfig } = requestConfig;
+  return axios({
+    method: 'get',
+    url,
+    headers: {
+      ...defaultHeaders,
+      ...headers,
+      'Range': 'bytes=0-1'
+    },
+    ...otherConfig,
+  }).then((res) => {
     return formatHeaders(res.headers);
-  } catch (err) {
-    throw err;
-  }
+  });
 }
-
-export default preRequest;

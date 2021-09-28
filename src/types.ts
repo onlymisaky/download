@@ -29,12 +29,29 @@ export interface DownloadResult {
   size: string;
 }
 
+export interface DownloadOutput {
+  path: string,
+  filename: string,
+  fileSize: Size
+}
+
 export interface DownloadEvents {
-  on(event: 'pre-request', listener: () => void): DownloadEvents;
-  on(event: 'start-parse', listener: () => void): DownloadEvents;
-  on(event: 'finish-parse', listener: (result: DownloadResult) => void): DownloadEvents;
-  on(event: 'start-download', listener: (ctx: DownloadCbCtx) => void): DownloadEvents;
-  on(event: 'downloading', listener: (chunk: string | Buffer, ctx: DownloadCbCtx) => void): DownloadEvents;
-  on(event: 'finish', listener: (result: DownloadResult) => void): DownloadEvents;
-  on(event: 'error', listener: (err: any) => void): DownloadEvents;
+  'start-parse'(): void,
+  'finish-parse'(ev: DownloadOutput): void;
+  'start-download'(ev: DownloadOutput & { downloaded: number, response?: AxiosResponse<fs.ReadStream>, }): void;
+  'downloading'(chunk: string | Buffer, ev: DownloadOutput & { downloaded: number, response?: AxiosResponse<fs.ReadStream>, }): void;
+  'finish'(ev: DownloadOutput): void;
+  'error'(err: any): void;
+}
+
+export interface Range {
+  start: number,
+  end: number,
+}
+
+export interface DownloadThread extends Range {
+  url: string,
+  output: string,
+  downloaded: number,
+  status: 'pending' | 'downloading' | 'finish' | 'error',
 }

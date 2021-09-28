@@ -126,6 +126,49 @@ function delPromise(path: fs.PathLike) {
   });
 }
 
+function mergeStream(
+  sources: fs.PathLike[],
+  writeStream: fs.WriteStream,
+  callback: fs.NoParamCallback = () => { }
+) {
+  if (sources.length === 0) {
+    writeStream.end();
+    callback(null);
+    return
+  }
+  const readStream = fs.createReadStream(sources.shift() as fs.PathLike);
+  readStream.pipe(writeStream, { end: false });
+  // todo
+  writeStream.on('finish', () => {
+    mergeStream(sources, writeStream);
+  });
+  readStream.on('error', (err) => {
+    readStream.close();
+    writeStream.close();
+    callback(err);
+  });
+  writeStream.on('error', (err) => {
+    readStream.close();
+    writeStream.close();
+    callback(err);
+  });
+}
+
+function joinFile(
+  sources: fs.PathLike[],
+  target: fs.PathLike,
+  callback: fs.NoParamCallback = () => { }
+) {
+  const writeStream = fs.createWriteStream(target);
+  // todo
+  writeStream.on('error', (err) => {
+    writeStream.close();
+    delSync(target);
+    callback(err);
+  });
+  mergeStream(sources, writeStream, callback)
+}
+
 export {
   mkdirsSync,
   mkdirs,
@@ -133,4 +176,5 @@ export {
   delSync,
   del,
   delPromise,
+  joinFile,
 };

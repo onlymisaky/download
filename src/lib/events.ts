@@ -1,7 +1,7 @@
 type EventName = string | symbol;
 type Listener = (...args: any[]) => void;
 
-export default class Events {
+export class Events {
 
   events = new Map<EventName, Listener[]>();
 
@@ -15,6 +15,7 @@ export default class Events {
   }
 
   emit(eventName: EventName, ...args: any[]): this {
+    // 解决 once 的 bug
     const listeners = [...(this.events.get(eventName) || [])];
     listeners.forEach((listener) => {
       listener(...args);

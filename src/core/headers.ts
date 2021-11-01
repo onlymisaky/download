@@ -44,21 +44,14 @@ function resolveResHeaders(resHeaders: Obj) {
   const disposition = resHeaders['content-disposition'];
   const filename = parseDisposition(disposition);
 
-  let range = (resHeaders['content-range'] || 'bytes /').toLowerCase();
-  range = range.replace('bytes', '').trim();
-  const arr = range.split('/');
-  const [rangeStart, rangeEnd] = arr[0].split('-');
-  let size = arr[1];
-
-  const length = resHeaders['content-type'];
+  const size = resHeaders['content-length'];
+  const acceptRanges = resHeaders['accept-ranges'];
 
   return {
     extensions,
     filename,
-    rangeStart,
-    rangeEnd,
     size,
-    length,
+    acceptRanges,
   }
 }
 

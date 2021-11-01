@@ -1,3 +1,5 @@
+import { Range } from '../types'
+
 const units = ['B', 'KB', 'MB', 'GB'];
 
 type Unit = 'B' | 'KB' | 'MB' | 'GB';
@@ -86,4 +88,29 @@ export class Size {
 
 export function sizeFactory(size: number, unit: Unit) {
   return new Size(size * 1, unit);
+}
+
+export function createRanges(size: number, count: number): Range[] {
+  if (count <= 1) {
+    return [{ start: 0, end: size }];
+  }
+
+  count = Math.round(count);
+
+  let n = 0;
+  const arr = [];
+  let rangeSize = Math.floor(size / count);
+  while (n <= count - 1) {
+    let start = n * rangeSize;
+    if (n > 0) {
+      start += 1;
+    }
+    let end = (n + 1) * rangeSize;
+    if (n === count - 1) {
+      end = size;
+    }
+    arr.push({ start, end });
+    n++;
+  }
+  return arr;
 }

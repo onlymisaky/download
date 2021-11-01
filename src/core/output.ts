@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { split } from '../lib/utils';
 
-function parseUrl(requestUrl: string) {
+export function parseUrl(requestUrl: string) {
   let filename = '';
   if (requestUrl) {
     filename = path.basename(new URL(requestUrl).pathname);
@@ -9,31 +9,31 @@ function parseUrl(requestUrl: string) {
   return filename;
 }
 
-function parseOutput(output: string = '.') {
+export function parseOutput(output: string = '.') {
   let outputPath = '.';
-  let filename = '';
+  let outputFilename = '';
 
   output = output.trim();
 
   if (['.', ''].includes(output)) {
     return {
       outputPath,
-      filename,
+      outputFilename,
     }
   }
 
-  [outputPath, filename] = split(output, '/', 'last');
+  [outputPath, outputFilename] = split(output, '/', 'last');
 
-  let [, extname] = split(filename, '.', 'last');
+  let [, extname] = split(outputFilename, '.', 'last');
 
   if (extname === '') {
     outputPath = output;
-    filename = '';
+    outputFilename = '';
   }
 
   return {
     outputPath,
-    filename,
+    outputFilename,
   }
 }
 
@@ -56,15 +56,16 @@ export function genOutput(options: Opt) {
     resExtensions = [''],
   } = options;
 
-  let { outputPath, filename: _filename } = parseOutput(`${output}`);
+  let { outputPath, outputFilename } = parseOutput(`${output}`);
+  const urlFilename = parseUrl(url);
 
-  let filename = userFilename || _filename || resFilename || parseUrl(url);
+  let filename = userFilename || outputFilename || resFilename || urlFilename;
 
   const arr = [
     filename,
-    _filename,
+    outputFilename,
     resFilename,
-    parseUrl(url),
+    urlFilename,
   ];
 
   for (let index = 0; index < arr.length; index++) {

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { mkdirsSync } from '../lib/dir';
 import { sizeFactory } from '../lib/file-size';
-import { Events } from '../lib/events';
+import { Events } from '../lib/Events';
 import { defaultHeaders, resolveResHeaders } from './headers';
 import { preRequest } from './pre-request';
 import { genOutput } from './output';
@@ -92,10 +92,6 @@ export class Downloader extends Events {
             downloaded: this.downloaded,
             response: res,
           });
-        })
-        .on('error', (err) => {
-          super.emit('error', err);
-          reject(err);
         })
         .pipe(fs.createWriteStream(`${this.output.path}/${this.output.filename}`))
         .on('finish', () => {

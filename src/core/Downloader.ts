@@ -83,7 +83,7 @@ export class Downloader extends Events {
 
     mkdirsSync(this.output.path);
 
-    const promise = new Promise<DownloadResult>((resolve, reject) => {
+    const promise = new Promise<DownloadResult>((resolve) => {
       data
         .on('data', (chunk) => {
           this.downloaded += chunk.length;
@@ -97,6 +97,8 @@ export class Downloader extends Events {
         .on('finish', () => {
           super.emit('finish', this.output);
           resolve({
+            success: true,
+            error: undefined,
             outputPath: this.output.path,
             filename: this.output.filename,
             size: this.output.fileSize.toString()
@@ -104,7 +106,13 @@ export class Downloader extends Events {
         })
         .on('error', (err) => {
           super.emit('error', err);
-          reject(err);
+          resolve({
+            success: false,
+            error: err,
+            outputPath: this.output.path,
+            filename: this.output.filename,
+            size: this.output.fileSize.toString()
+          });
         });
     });
 

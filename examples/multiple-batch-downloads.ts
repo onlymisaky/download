@@ -27,7 +27,7 @@ async function multipleBatchDownloads() {
 
   // 依次下载，错误的下载不会阻塞后续下载任务
   const result = await download(links, 'download/emu', {
-    count: 1, // 设置每次下载文件个数，默认全部同时下载
+    concurrent: 2, // 设置每次下载文件个数，默认全部同时下载
     onStartDownload,
     onDownload,
   });

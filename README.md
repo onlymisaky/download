@@ -103,7 +103,7 @@ const links = [
 
 // 依次下载，错误的下载不会阻塞后续下载任务
 const result = await download(links, 'download/emu', {
-  count: 1, // 设置每次下载文件个数，默认全部同时下载
+  concurrent: 2, // 设置每次下载文件个数，默认全部同时下载
   onStartDownload,
   onDownload,
 });
@@ -140,13 +140,13 @@ default: `{}`
 
 通过 [axios](https://github.com/axios/axios) 创请求，所以 [AxiosRequestConfig](https://github.com/axios/axios#request-config) 的属性都可以传入，除此之外，还有一下这些属性：
 
-##### count
+##### concurrent
 
 type: `number`
 
 default: `url.length - 1`
 
-当传入的 url 为数组时，通过 count 设置每次同时下载的数量，默认全部同时下载
+当传入的 url 为数组时，通过 concurrent 设置每次同时下载的数量，默认全部同时下载
 
 ##### filename
 

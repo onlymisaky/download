@@ -24,6 +24,8 @@ export type OnStartDownload<T> = (ctx: DownloadCbCtx) => T;
 export type OnDownload<T> = (chunk: string | Buffer, ctx: DownloadCbCtx, customCtx?: T) => void;
 
 export interface DownloadResult {
+  success: boolean;
+  error: any;
   outputPath: string,
   filename: string,
   size: string;

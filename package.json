@@ -1,6 +1,6 @@
 {
   "name": "@onlymisaky/downloads",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "download file , 下载文件",
   "main": "index.js",
   "typings": "typings/index.d.ts",
@@ -25,6 +25,7 @@
     "url": "https://github.com/onlymisaky/download"
   },
   "dependencies": {
+    "@onlymisaky/promise-queue": "0.0.2",
     "axios": "^0.21.4",
     "content-disposition": "^0.5.3",
     "mime-db": "^1.49.0"

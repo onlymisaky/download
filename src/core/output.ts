@@ -41,7 +41,7 @@ interface Opt {
   output: string,
   url?: string,
   userFilename?: string,
-  useExtname?: string,
+  userExtname?: string,
   resFilename?: string,
   resExtensions?: string[],
 }
@@ -51,7 +51,7 @@ export function genOutput(options: Opt) {
     output,
     url = '',
     userFilename = '',
-    useExtname = '',
+    userExtname = '',
     resFilename = '',
     resExtensions = [''],
   } = options;
@@ -61,24 +61,21 @@ export function genOutput(options: Opt) {
 
   let filename = userFilename || outputFilename || resFilename || urlFilename;
 
-  const arr = [
-    filename,
-    outputFilename,
-    resFilename,
-    urlFilename,
-  ];
+  let [, extname] = split(filename, '.', 'last');
 
-  for (let index = 0; index < arr.length; index++) {
-    let [, extname] = split(arr[index], '.', 'last');
-    if (extname === '') {
-      if (index < arr.length - 1) {
-        continue;
-      } else {
-        filename = filename + '.' + (useExtname || resExtensions[0]);
-      }
-    } else {
-      break;
-    }
+  if (extname === '') {
+    let extnames = [
+      ...[
+        userFilename,
+        outputFilename,
+        resFilename,
+        urlFilename
+      ].map((item) => split(item, '.', 'last')[1]),
+      userExtname,
+      resExtensions[0],
+    ]
+    extname = extnames.find((item) => item) as string;
+    filename = filename + '.' + extname;
   }
 
   return {

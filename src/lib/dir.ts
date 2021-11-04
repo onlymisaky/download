@@ -126,6 +126,8 @@ function delPromise(path: fs.PathLike) {
   });
 }
 
+// https://www.google.com.hk/search?q=node+stream+%E5%90%88%E5%B9%B6%E6%96%87%E4%BB%B6&newwindow=1&biw=1920&bih=969&ei=j05VYfvQBoKB-Ab-15e4DQ&oq=node+stream+%E5%90%88%E5%B9%B6%E6%96%87%E4%BB%B6&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKABOggIABCwAxDNAjoFCAAQgAQ6BAgAEEM6BwgAEIAEEAw6BAgAEB46BggAEAgQHjoGCAAQChAeOgcIIRAKEKABSgQIQRgBUKW_BFjmgwVg4IYFaApwAHgBgAG8A4gBry2SAQowLjE5LjcuMi4xmAEAoAEByAEBwAEB&sclient=gws-wiz&ved=0ahUKEwi71Nzv_qXzAhWCAN4KHf7rBdc4ChDh1QMIDg&uact=5
+// https://blog.csdn.net/qfluohao/article/details/105737160
 function mergeStream(
   sources: fs.PathLike[],
   writeStream: fs.WriteStream,

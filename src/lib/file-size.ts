@@ -1,6 +1,6 @@
 import { Range } from '../types'
 
-const units = ['B', 'KB', 'MB', 'GB'];
+export const units = ['B', 'KB', 'MB', 'GB'];
 
 type Unit = 'B' | 'KB' | 'MB' | 'GB';
 

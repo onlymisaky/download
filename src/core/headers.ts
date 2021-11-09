@@ -45,7 +45,7 @@ function resolveResHeaders(resHeaders: Obj) {
   const filename = parseDisposition(disposition);
 
   const size = resHeaders['content-length'];
-  const acceptRanges = resHeaders['accept-ranges'];
+  const acceptRanges = resHeaders['accept-ranges'] as string;
 
   return {
     extensions,

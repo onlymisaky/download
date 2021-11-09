@@ -131,7 +131,7 @@ function delPromise(path: fs.PathLike) {
 function mergeStream(
   sources: fs.PathLike[],
   writeStream: fs.WriteStream,
-  callback: fs.NoParamCallback = () => { }
+  callback: fs.NoParamCallback = () => { },
 ) {
   if (sources.length === 0) {
     writeStream.end();
@@ -140,9 +140,8 @@ function mergeStream(
   }
   const readStream = fs.createReadStream(sources.shift() as fs.PathLike);
   readStream.pipe(writeStream, { end: false });
-  // todo
-  writeStream.on('finish', () => {
-    mergeStream(sources, writeStream);
+  readStream.on('end', () => {
+    mergeStream(sources, writeStream, callback);
   });
   readStream.on('error', (err) => {
     readStream.close();
@@ -156,10 +155,10 @@ function mergeStream(
   });
 }
 
-function joinFile(
+function mergeFiles(
   sources: fs.PathLike[],
   target: fs.PathLike,
-  callback: fs.NoParamCallback = () => { }
+  callback: fs.NoParamCallback = () => { },
 ) {
   const writeStream = fs.createWriteStream(target);
   // todo
@@ -171,6 +170,20 @@ function joinFile(
   mergeStream(sources, writeStream, callback)
 }
 
+function mergeFilesPromise(
+  sources: fs.PathLike[],
+  target: fs.PathLike,
+) {
+  return new Promise<void>((resolve, reject) => {
+    mergeFiles(sources, target, (err) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve();
+    });
+  })
+}
+
 export {
   mkdirsSync,
   mkdirs,
@@ -178,5 +191,6 @@ export {
   delSync,
   del,
   delPromise,
-  joinFile,
+  mergeFiles,
+  mergeFilesPromise,
 };

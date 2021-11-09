@@ -30,6 +30,8 @@ async function multipleBatchDownloads() {
     concurrent: 2, // 设置每次下载文件个数，默认全部同时下载
     onStartDownload,
     onDownload,
+    retryCount: 2,
+    threadCount: 5
   });
 
   return result;

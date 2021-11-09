@@ -1,6 +1,6 @@
 {
   "name": "@onlymisaky/downloads",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "download file , 下载文件",
   "main": "index.js",
   "typings": "typings/index.d.ts",

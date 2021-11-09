@@ -10,7 +10,7 @@ export type DownloadOptions<T> = {
   filename: string;
   onStartDownload: OnStartDownload<T>,
   onDownload: OnDownload<T>,
-} & AxiosRequestConfig;
+} & DownloadConfig & AxiosRequestConfig;
 
 export interface DownloadCbCtx {
   outputPath: string,
@@ -22,6 +22,11 @@ export interface DownloadCbCtx {
 
 export type OnStartDownload<T> = (ctx: DownloadCbCtx) => T;
 export type OnDownload<T> = (chunk: string | Buffer, ctx: DownloadCbCtx, customCtx?: T) => void;
+
+export interface DownloadConfig {
+  retryCount: number;
+  threadCount: number;
+}
 
 export interface DownloadResult {
   success: boolean;

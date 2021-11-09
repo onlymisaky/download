@@ -1,11 +1,11 @@
-type PromiseFucn = (...args: any[]) => Promise<any>;
+type PromiseFunc = (...args: any[]) => Promise<any>;
 
-export async function limitPromise(concurrent: number, promiseQueue: PromiseFucn[]) {
+export async function limitPromise(concurrent: number, promiseQueue: PromiseFunc[]) {
   const results: Promise<PromiseSettledResult<any>>[] = [];
   const executing: Promise<void>[] = [];
 
   while (promiseQueue.length > 0) {
-    const promise = promiseQueue.shift() as PromiseFucn;
+    const promise = promiseQueue.shift() as PromiseFunc;
 
     const p = Promise.resolve().then(
       () => Promise.allSettled([promise()]).then((res) => res[0])
@@ -25,7 +25,7 @@ export async function limitPromise(concurrent: number, promiseQueue: PromiseFucn
   return Promise.all(results);
 }
 
-export function limitPromise2(concurrent: number, promiseQueue: PromiseFucn[]) {
+export function limitPromise2(concurrent: number, promiseQueue: PromiseFunc[]) {
   const results: Promise<PromiseSettledResult<any>>[] = [];
   const executing: Promise<void>[] = [];
 

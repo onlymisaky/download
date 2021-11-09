@@ -2,9 +2,11 @@
 
 > 使用 nodejs 下载文件，受 [download](https://github.com/kevva/download) 启发。
 
+支持多个同时下载，多线程下载，自动解析文件名称和扩展名。
+
 ## 安装
 
-> npm 不允许 @scope 类型的包名中含有单独的 download 字母，否则无法发布
+> 由于 npm 不允许包名中含有单独的 download 字母，否则无法发布，所以命名为 `downloads`
 
 ```bash
 npm i @onlymisaky/downloads
@@ -147,6 +149,18 @@ type: `number`
 default: `url.length - 1`
 
 当传入的 url 为数组时，通过 concurrent 设置每次同时下载的数量，默认全部同时下载
+
+##### retryCount
+
+type: `number`
+
+default: `3`
+
+##### threadCount
+
+type: `number`
+
+default: `5`
 
 ##### filename
 
